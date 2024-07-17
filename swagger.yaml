@@ -1,718 +1,701 @@
 ---
-swagger: "2.0"
+openapi: 3.1.0
 info:
-  description: "This is a sample server Petstore server.  You can find out more about\
-    \ Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).\
-    \  For this sample, you can use the api key `special-key` to test the authorization\
-    \ filters."
-  version: "1.0.5"
-  title: "Swagger Petstore"
-  termsOfService: "http://swagger.io/terms/"
-  contact:
-    email: "apiteam@swagger.io"
-  license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "petstore.swagger.io"
-basePath: "/v2"
-tags:
-- name: "pet"
-  description: "Everything about your Pets"
-  externalDocs:
-    description: "Find out more"
-    url: "http://swagger.io"
-- name: "store"
-  description: "Access to Petstore orders"
-- name: "user"
-  description: "Operations about user"
-  externalDocs:
-    description: "Find out more about our store"
-    url: "http://swagger.io"
-schemes:
-- "https"
-- "http"
+  title: CareerCraft
+  version: v1
 paths:
-  /pet/{petId}/uploadImage:
-    post:
+  "/api/v1/keywords/simple":
+    get:
       tags:
-      - "pet"
-      summary: "uploads an image"
-      description: ""
-      operationId: "uploadFile"
-      consumes:
-      - "multipart/form-data"
-      produces:
-      - "application/json"
+      - keywords
+      summary: Simple Keyword List
+      operationId: simple_keyword_list_api_v1_keywords_simple_get
       parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet to update"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "additionalMetadata"
-        in: "formData"
-        description: "Additional data to pass to server"
-        required: false
-        type: "string"
-      - name: "file"
-        in: "formData"
-        description: "file to upload"
-        required: false
-        type: "file"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/ApiResponse"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet:
-    post:
-      tags:
-      - "pet"
-      summary: "Add a new pet to the store"
-      description: ""
-      operationId: "addPet"
-      consumes:
-      - "application/json"
-      - "application/xml"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
+      - name: keyword_type
+        in: query
         required: true
         schema:
-          $ref: "#/definitions/Pet"
+          "$ref": "#/components/schemas/KeywordType"
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          title: Limit
       responses:
-        405:
-          description: "Invalid input"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-    put:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/KeywordSimpleList"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/api/v1/jobs/work-experiences/simple":
+    get:
       tags:
-      - "pet"
-      summary: "Update an existing pet"
-      description: ""
-      operationId: "updatePet"
-      consumes:
-      - "application/json"
-      - "application/xml"
-      produces:
-      - "application/json"
-      - "application/xml"
+      - jobs
+      summary: Simple Work Experience List
+      operationId: simple_work_experience_list_api_v1_jobs_work_experiences_simple_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/JobWorkExperienceSimpleList"
+  "/api/v1/jobs/employment-types/simple":
+    get:
+      tags:
+      - jobs
+      summary: Simple Employment Type List
+      operationId: simple_employment_type_list_api_v1_jobs_employment_types_simple_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/JobEmploymentTypeSimpleList"
+  "/api/v1/jobs/work-arrangements/simple":
+    get:
+      tags:
+      - jobs
+      summary: Simple Work Arrangement List
+      operationId: simple_work_arrangement_list_api_v1_jobs_work_arrangements_simple_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/JobWorkArrangementSimpleList"
+  "/api/v1/jobs/latest/simple":
+    get:
+      tags:
+      - jobs
+      summary: Latest Simple Job List
+      operationId: latest_simple_job_list_api_v1_jobs_latest_simple_get
       parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/JobDetailSimpleList"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/api/v1/jobs/by-role/simple":
+    get:
+      tags:
+      - jobs
+      summary: Simple Job List By Role
+      operationId: simple_job_list_by_role_api_v1_jobs_by_role_simple_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          title: Limit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+              title: Roles
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/JobDetailSimpleList"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/api/v1/jobs/search/simple":
+    get:
+      tags:
+      - jobs
+      summary: Simple Job Search
+      operationId: simple_job_search_api_v1_jobs_search_simple_get
+      parameters:
+      - name: query
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Query
+      - name: company_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Company Id
+      - name: location_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location Id
+      - name: work_experience_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Work Experience Id
+      - name: employment_type_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Employment Type Id
+      - name: work_arrangement_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Work Arrangement Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/JobDetailSimpleList"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/api/v1/jobs/{job_id}/detail":
+    get:
+      tags:
+      - jobs
+      summary: Get Job Detail
+      operationId: get_job_detail_api_v1_jobs__job_id__detail_get
+      parameters:
+      - name: job_id
+        in: path
         required: true
         schema:
-          $ref: "#/definitions/Pet"
+          type: string
+          title: Job Id
       responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-        405:
-          description: "Validation exception"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet/findByStatus:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/JobDetail"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/api/v1/companies/search/simple":
     get:
       tags:
-      - "pet"
-      summary: "Finds Pets by status"
-      description: "Multiple status values can be provided with comma separated strings"
-      operationId: "findPetsByStatus"
-      produces:
-      - "application/json"
-      - "application/xml"
+      - companies
+      summary: Simple Company Search
+      operationId: simple_company_search_api_v1_companies_search_simple_get
       parameters:
-      - name: "status"
-        in: "query"
-        description: "Status values that need to be considered for filter"
-        required: true
-        type: "array"
-        items:
-          type: "string"
-          enum:
-          - "available"
-          - "pending"
-          - "sold"
-          default: "available"
-        collectionFormat: "multi"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid status value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet/findByTags:
-    get:
-      tags:
-      - "pet"
-      summary: "Finds Pets by tags"
-      description: "Multiple tags can be provided with comma separated strings. Use\
-        \ tag1, tag2, tag3 for testing."
-      operationId: "findPetsByTags"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "tags"
-        in: "query"
-        description: "Tags to filter by"
-        required: true
-        type: "array"
-        items:
-          type: "string"
-        collectionFormat: "multi"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid tag value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-      deprecated: true
-  /pet/{petId}:
-    get:
-      tags:
-      - "pet"
-      summary: "Find pet by ID"
-      description: "Returns a single pet"
-      operationId: "getPetById"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet to return"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-      security:
-      - api_key: []
-    post:
-      tags:
-      - "pet"
-      summary: "Updates a pet in the store with form data"
-      description: ""
-      operationId: "updatePetWithForm"
-      consumes:
-      - "application/x-www-form-urlencoded"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet that needs to be updated"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "name"
-        in: "formData"
-        description: "Updated name of the pet"
-        required: false
-        type: "string"
-      - name: "status"
-        in: "formData"
-        description: "Updated status of the pet"
-        required: false
-        type: "string"
-      responses:
-        405:
-          description: "Invalid input"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-    delete:
-      tags:
-      - "pet"
-      summary: "Deletes a pet"
-      description: ""
-      operationId: "deletePet"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "api_key"
-        in: "header"
-        required: false
-        type: "string"
-      - name: "petId"
-        in: "path"
-        description: "Pet id to delete"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /store/order:
-    post:
-      tags:
-      - "store"
-      summary: "Place an order for a pet"
-      description: ""
-      operationId: "placeOrder"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "order placed for purchasing the pet"
+      - name: query
+        in: query
         required: true
         schema:
-          $ref: "#/definitions/Order"
+          type: string
+          title: Query
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          title: Limit
       responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Order"
-        400:
-          description: "Invalid Order"
-  /store/order/{orderId}:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CompanySimpleList"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/api/v1/locations/search/simple":
     get:
       tags:
-      - "store"
-      summary: "Find purchase order by ID"
-      description: "For valid response try integer IDs with value >= 1 and <= 10.\
-        \ Other values will generated exceptions"
-      operationId: "getOrderById"
-      produces:
-      - "application/json"
-      - "application/xml"
+      - locations
+      summary: Simple Location Search
+      operationId: simple_location_search_api_v1_locations_search_simple_get
       parameters:
-      - name: "orderId"
-        in: "path"
-        description: "ID of pet that needs to be fetched"
-        required: true
-        type: "integer"
-        maximum: 10
-        minimum: 1
-        format: "int64"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Order"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Order not found"
-    delete:
-      tags:
-      - "store"
-      summary: "Delete purchase order by ID"
-      description: "For valid response try integer IDs with positive integer value.\
-        \ Negative or non-integer values will generate API errors"
-      operationId: "deleteOrder"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "orderId"
-        in: "path"
-        description: "ID of the order that needs to be deleted"
-        required: true
-        type: "integer"
-        minimum: 1
-        format: "int64"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Order not found"
-  /store/inventory:
-    get:
-      tags:
-      - "store"
-      summary: "Returns pet inventories by status"
-      description: "Returns a map of status codes to quantities"
-      operationId: "getInventory"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "object"
-            additionalProperties:
-              type: "integer"
-              format: "int32"
-      security:
-      - api_key: []
-  /user/createWithArray:
-    post:
-      tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithArrayInput"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
+      - name: query
+        in: query
         required: true
         schema:
-          type: "array"
+          type: string
+          title: Query
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/LocationSimpleList"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+components:
+  schemas:
+    CompanySimpleField:
+      properties:
+        company_id:
+          type: string
+          title: Company Id
+        company_name:
+          type: string
+          title: Company Name
+      type: object
+      required:
+      - company_id
+      - company_name
+      title: CompanySimpleField
+    CompanySimpleList:
+      properties:
+        companies:
           items:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/createWithList:
-    post:
-      tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithListInput"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
-        required: true
-        schema:
-          type: "array"
+            "$ref": "#/components/schemas/CompanySimpleField"
+          type: array
+          title: Companies
+      type: object
+      required:
+      - companies
+      title: CompanySimpleList
+    HTTPValidationError:
+      properties:
+        detail:
           items:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/{username}:
-    get:
-      tags:
-      - "user"
-      summary: "Get user by user name"
-      description: ""
-      operationId: "getUserByName"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be fetched. Use user1 for testing. "
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/User"
-        400:
-          description: "Invalid username supplied"
-        404:
-          description: "User not found"
-    put:
-      tags:
-      - "user"
-      summary: "Updated user"
-      description: "This can only be done by the logged in user."
-      operationId: "updateUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "name that need to be updated"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "Updated user object"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
-      responses:
-        400:
-          description: "Invalid user supplied"
-        404:
-          description: "User not found"
-    delete:
-      tags:
-      - "user"
-      summary: "Delete user"
-      description: "This can only be done by the logged in user."
-      operationId: "deleteUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be deleted"
-        required: true
-        type: "string"
-      responses:
-        400:
-          description: "Invalid username supplied"
-        404:
-          description: "User not found"
-  /user/login:
-    get:
-      tags:
-      - "user"
-      summary: "Logs user into the system"
-      description: ""
-      operationId: "loginUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "query"
-        description: "The user name for login"
-        required: true
-        type: "string"
-      - name: "password"
-        in: "query"
-        description: "The password for login in clear text"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          headers:
-            X-Expires-After:
-              type: "string"
-              format: "date-time"
-              description: "date in UTC when token expires"
-            X-Rate-Limit:
-              type: "integer"
-              format: "int32"
-              description: "calls per hour allowed by the user"
-          schema:
-            type: "string"
-        400:
-          description: "Invalid username/password supplied"
-  /user/logout:
-    get:
-      tags:
-      - "user"
-      summary: "Logs out current logged in user session"
-      description: ""
-      operationId: "logoutUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters: []
-      responses:
-        default:
-          description: "successful operation"
-  /user:
-    post:
-      tags:
-      - "user"
-      summary: "Create user"
-      description: "This can only be done by the logged in user."
-      operationId: "createUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Created user object"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-securityDefinitions:
-  api_key:
-    type: "apiKey"
-    name: "api_key"
-    in: "header"
-  petstore_auth:
-    type: "oauth2"
-    authorizationUrl: "https://petstore.swagger.io/oauth/authorize"
-    flow: "implicit"
-    scopes:
-      read:pets: "read your pets"
-      write:pets: "modify pets in your account"
-definitions:
-  ApiResponse:
-    type: "object"
-    properties:
-      code:
-        type: "integer"
-        format: "int32"
-      type:
-        type: "string"
-      message:
-        type: "string"
-  Category:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Category"
-  Pet:
-    type: "object"
-    required:
-    - "name"
-    - "photoUrls"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      category:
-        $ref: "#/definitions/Category"
-      name:
-        type: "string"
-        example: "doggie"
-      photoUrls:
-        type: "array"
-        xml:
-          wrapped: true
-        items:
-          type: "string"
-          xml:
-            name: "photoUrl"
-      tags:
-        type: "array"
-        xml:
-          wrapped: true
-        items:
-          xml:
-            name: "tag"
-          $ref: "#/definitions/Tag"
-      status:
-        type: "string"
-        description: "pet status in the store"
-        enum:
-        - "available"
-        - "pending"
-        - "sold"
-    xml:
-      name: "Pet"
-  Tag:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Tag"
-  Order:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      petId:
-        type: "integer"
-        format: "int64"
-      quantity:
-        type: "integer"
-        format: "int32"
-      shipDate:
-        type: "string"
-        format: "date-time"
-      status:
-        type: "string"
-        description: "Order Status"
-        enum:
-        - "placed"
-        - "approved"
-        - "delivered"
-      complete:
-        type: "boolean"
-    xml:
-      name: "Order"
-  User:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      username:
-        type: "string"
-      firstName:
-        type: "string"
-      lastName:
-        type: "string"
-      email:
-        type: "string"
-      password:
-        type: "string"
-      phone:
-        type: "string"
-      userStatus:
-        type: "integer"
-        format: "int32"
-        description: "User Status"
-    xml:
-      name: "User"
-externalDocs:
-  description: "Find out more about Swagger"
-  url: "http://swagger.io"
+            "$ref": "#/components/schemas/ValidationError"
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    JobCompanyField:
+      properties:
+        company_id:
+          type: string
+          title: Company Id
+        company_name:
+          type: string
+          title: Company Name
+        logo_url:
+          type: string
+          title: Logo Url
+        links:
+          items:
+            "$ref": "#/components/schemas/JobCompanyLinkField"
+          type: array
+          title: Links
+        locations:
+          items:
+            "$ref": "#/components/schemas/JobCompanyLocationField"
+          type: array
+          title: Locations
+      type: object
+      required:
+      - company_id
+      - company_name
+      - logo_url
+      - links
+      - locations
+      title: JobCompanyField
+    JobCompanyLinkField:
+      properties:
+        link_name:
+          type: string
+          title: Link Name
+        link_url:
+          type: string
+          title: Link Url
+      type: object
+      required:
+      - link_name
+      - link_url
+      title: JobCompanyLinkField
+    JobCompanyLocationField:
+      properties:
+        country_id:
+          type: string
+          title: Country Id
+        city_id:
+          type: string
+          title: City Id
+        country_name:
+          type: string
+          title: Country Name
+        city_name:
+          type: string
+          title: City Name
+        location_type:
+          type: string
+          title: Location Type
+      type: object
+      required:
+      - country_id
+      - city_id
+      - country_name
+      - city_name
+      - location_type
+      title: JobCompanyLocationField
+    JobDetail:
+      properties:
+        company:
+          "$ref": "#/components/schemas/JobCompanyField"
+        job_detail:
+          "$ref": "#/components/schemas/JobDetailField"
+      type: object
+      required:
+      - company
+      - job_detail
+      title: JobDetail
+    JobDetailField:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+        job_title:
+          type: string
+          title: Job Title
+        work_experience:
+          type: string
+          title: Work Experience
+        employment_type:
+          type: string
+          title: Employment Type
+        work_arrangement:
+          type: string
+          title: Work Arrangement
+        salaries:
+          items:
+            "$ref": "#/components/schemas/JobSalaryField"
+          type: array
+          title: Salaries
+        content:
+          type: string
+          title: Content
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        deleted_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Deleted At
+      type: object
+      required:
+      - job_id
+      - job_title
+      - work_experience
+      - employment_type
+      - work_arrangement
+      - salaries
+      - content
+      - created_at
+      - updated_at
+      - deleted_at
+      title: JobDetailField
+    JobDetailSimpleField:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+        company_id:
+          type: string
+          title: Company Id
+        company_name:
+          type: string
+          title: Company Name
+        company_logo_url:
+          type: string
+          title: Company Logo Url
+        job_title:
+          type: string
+          title: Job Title
+        work_experience:
+          type: string
+          title: Work Experience
+        employment_type:
+          type: string
+          title: Employment Type
+        work_arrangement:
+          type: string
+          title: Work Arrangement
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - job_id
+      - company_id
+      - company_name
+      - company_logo_url
+      - job_title
+      - work_experience
+      - employment_type
+      - work_arrangement
+      - created_at
+      title: JobDetailSimpleField
+    JobDetailSimpleList:
+      properties:
+        jobs:
+          items:
+            "$ref": "#/components/schemas/JobDetailSimpleField"
+          type: array
+          title: Jobs
+      type: object
+      required:
+      - jobs
+      title: JobDetailSimpleList
+    JobEmploymentTypeSimpleField:
+      properties:
+        employment_type_id:
+          type: string
+          title: Employment Type Id
+        employment_type:
+          type: string
+          title: Employment Type
+      type: object
+      required:
+      - employment_type_id
+      - employment_type
+      title: JobEmploymentTypeSimpleField
+    JobEmploymentTypeSimpleList:
+      properties:
+        employment_types:
+          items:
+            "$ref": "#/components/schemas/JobEmploymentTypeSimpleField"
+          type: array
+          title: Employment Types
+      type: object
+      required:
+      - employment_types
+      title: JobEmploymentTypeSimpleList
+    JobSalaryField:
+      properties:
+        range:
+          "$ref": "#/components/schemas/JobSalaryRangeField"
+        currency:
+          type: string
+          title: Currency
+      type: object
+      required:
+      - range
+      - currency
+      title: JobSalaryField
+    JobSalaryRangeField:
+      properties:
+        min:
+          type: number
+          title: Min
+        max:
+          type: number
+          title: Max
+      type: object
+      required:
+      - min
+      - max
+      title: JobSalaryRangeField
+    JobWorkArrangementSimpleField:
+      properties:
+        work_arrangement_id:
+          type: string
+          title: Work Arrangement Id
+        work_arrangement:
+          type: string
+          title: Work Arrangement
+      type: object
+      required:
+      - work_arrangement_id
+      - work_arrangement
+      title: JobWorkArrangementSimpleField
+    JobWorkArrangementSimpleList:
+      properties:
+        work_arrangements:
+          items:
+            "$ref": "#/components/schemas/JobWorkArrangementSimpleField"
+          type: array
+          title: Work Arrangements
+      type: object
+      required:
+      - work_arrangements
+      title: JobWorkArrangementSimpleList
+    JobWorkExperienceSimpleField:
+      properties:
+        work_experience_id:
+          type: string
+          title: Work Experience Id
+        category:
+          type: string
+          title: Category
+        description:
+          type: string
+          title: Description
+      type: object
+      required:
+      - work_experience_id
+      - category
+      - description
+      title: JobWorkExperienceSimpleField
+    JobWorkExperienceSimpleList:
+      properties:
+        work_experiences:
+          items:
+            "$ref": "#/components/schemas/JobWorkExperienceSimpleField"
+          type: array
+          title: Work Experiences
+      type: object
+      required:
+      - work_experiences
+      title: JobWorkExperienceSimpleList
+    KeywordSimpleField:
+      properties:
+        keyword_id:
+          type: string
+          title: Keyword Id
+        keyword_name:
+          type: string
+          title: Keyword Name
+      type: object
+      required:
+      - keyword_id
+      - keyword_name
+      title: KeywordSimpleField
+    KeywordSimpleList:
+      properties:
+        keywords:
+          items:
+            "$ref": "#/components/schemas/KeywordSimpleField"
+          type: array
+          title: Keywords
+      type: object
+      required:
+      - keywords
+      title: KeywordSimpleList
+    KeywordType:
+      type: string
+      enum:
+      - JOB
+      - SKILL
+      title: KeywordType
+    LocationSimpleField:
+      properties:
+        location_id:
+          type: string
+          title: Location Id
+        location_name:
+          type: string
+          title: Location Name
+      type: object
+      required:
+      - location_id
+      - location_name
+      title: LocationSimpleField
+    LocationSimpleList:
+      properties:
+        locations:
+          items:
+            "$ref": "#/components/schemas/LocationSimpleField"
+          type: array
+          title: Locations
+      type: object
+      required:
+      - locations
+      title: LocationSimpleList
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
