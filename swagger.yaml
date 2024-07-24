@@ -109,6 +109,14 @@ paths:
       summary: Simple Job List By Role
       operationId: simple_job_list_by_role_api_v1_jobs_by_role_simple_get
       parameters:
+      - name: role_ids
+        in: query
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+          title: Role Ids
       - name: limit
         in: query
         required: false
@@ -116,15 +124,6 @@ paths:
           type: integer
           default: 10
           title: Limit
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: string
-              title: Roles
       responses:
         '200':
           description: Successful Response
@@ -248,9 +247,10 @@ paths:
       parameters:
       - name: query
         in: query
-        required: true
+        required: false
         schema:
           type: string
+          default: ''
           title: Query
       - name: limit
         in: query
@@ -281,9 +281,10 @@ paths:
       parameters:
       - name: query
         in: query
-        required: true
+        required: false
         schema:
           type: string
+          default: ''
           title: Query
       - name: limit
         in: query
@@ -312,13 +313,12 @@ components:
         company_id:
           type: string
           title: Company Id
+          default: ''
         company_name:
           type: string
           title: Company Name
+          default: ''
       type: object
-      required:
-      - company_id
-      - company_name
       title: CompanySimpleField
     CompanySimpleList:
       properties:
@@ -327,9 +327,8 @@ components:
             "$ref": "#/components/schemas/CompanySimpleField"
           type: array
           title: Companies
+          default: []
       type: object
-      required:
-      - companies
       title: CompanySimpleList
     HTTPValidationError:
       properties:
@@ -345,172 +344,185 @@ components:
         company_id:
           type: string
           title: Company Id
+          default: ''
         company_name:
           type: string
           title: Company Name
+          default: ''
         logo_url:
-          type: string
+          anyOf:
+          - type: string
+          - type: 'null'
           title: Logo Url
         links:
           items:
             "$ref": "#/components/schemas/JobCompanyLinkField"
           type: array
           title: Links
+          default: []
         locations:
           items:
             "$ref": "#/components/schemas/JobCompanyLocationField"
           type: array
           title: Locations
+          default: []
       type: object
-      required:
-      - company_id
-      - company_name
-      - logo_url
-      - links
-      - locations
       title: JobCompanyField
     JobCompanyLinkField:
       properties:
         link_name:
           type: string
           title: Link Name
+          default: ''
         link_url:
           type: string
           title: Link Url
+          default: ''
       type: object
-      required:
-      - link_name
-      - link_url
       title: JobCompanyLinkField
     JobCompanyLocationField:
       properties:
         country_id:
           type: string
           title: Country Id
+          default: ''
         city_id:
           type: string
           title: City Id
+          default: ''
         country_name:
           type: string
           title: Country Name
+          default: ''
         city_name:
           type: string
           title: City Name
+          default: ''
         location_type:
           type: string
           title: Location Type
+          default: ''
       type: object
-      required:
-      - country_id
-      - city_id
-      - country_name
-      - city_name
-      - location_type
       title: JobCompanyLocationField
     JobDetail:
       properties:
         company:
-          "$ref": "#/components/schemas/JobCompanyField"
+          allOf:
+          - "$ref": "#/components/schemas/JobCompanyField"
+          default:
+            company_id: ''
+            company_name: ''
+            links: []
+            locations: []
         job_detail:
-          "$ref": "#/components/schemas/JobDetailField"
+          allOf:
+          - "$ref": "#/components/schemas/JobDetailField"
+          default:
+            job_id: ''
+            job_title: ''
+            work_experience: ''
+            employment_type: ''
+            work_arrangement: ''
+            salaries:
+              currency: ''
+              range: {}
+            content: ''
+            created_at: ''
+            updated_at: ''
       type: object
-      required:
-      - company
-      - job_detail
       title: JobDetail
     JobDetailField:
       properties:
         job_id:
           type: string
           title: Job Id
+          default: ''
         job_title:
           type: string
           title: Job Title
+          default: ''
         work_experience:
           type: string
           title: Work Experience
+          default: ''
         employment_type:
           type: string
           title: Employment Type
+          default: ''
         work_arrangement:
           type: string
           title: Work Arrangement
+          default: ''
+        location:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location
         salaries:
-          items:
-            "$ref": "#/components/schemas/JobSalaryField"
-          type: array
-          title: Salaries
+          allOf:
+          - "$ref": "#/components/schemas/JobSalaryField"
+          default:
+            range: {}
+            currency: ''
         content:
           type: string
           title: Content
+          default: ''
         created_at:
           type: string
-          format: date-time
           title: Created At
+          default: ''
         updated_at:
           type: string
-          format: date-time
           title: Updated At
-        deleted_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Deleted At
+          default: ''
       type: object
-      required:
-      - job_id
-      - job_title
-      - work_experience
-      - employment_type
-      - work_arrangement
-      - salaries
-      - content
-      - created_at
-      - updated_at
-      - deleted_at
       title: JobDetailField
     JobDetailSimpleField:
       properties:
         job_id:
           type: string
           title: Job Id
+          default: ''
         company_id:
           type: string
           title: Company Id
+          default: ''
         company_name:
           type: string
           title: Company Name
+          default: ''
         company_logo_url:
-          type: string
+          anyOf:
+          - type: string
+          - type: 'null'
           title: Company Logo Url
         job_title:
           type: string
           title: Job Title
+          default: ''
         work_experience:
           type: string
           title: Work Experience
+          default: ''
         employment_type:
           type: string
           title: Employment Type
+          default: ''
         work_arrangement:
           type: string
           title: Work Arrangement
+          default: ''
+        location:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location
         created_at:
           type: string
-          format: date-time
           title: Created At
+          default: ''
       type: object
-      required:
-      - job_id
-      - company_id
-      - company_name
-      - company_logo_url
-      - job_title
-      - work_experience
-      - employment_type
-      - work_arrangement
-      - created_at
       title: JobDetailSimpleField
     JobDetailSimpleList:
       properties:
@@ -519,22 +531,20 @@ components:
             "$ref": "#/components/schemas/JobDetailSimpleField"
           type: array
           title: Jobs
+          default: []
       type: object
-      required:
-      - jobs
       title: JobDetailSimpleList
     JobEmploymentTypeSimpleField:
       properties:
         employment_type_id:
           type: string
           title: Employment Type Id
+          default: ''
         employment_type:
           type: string
           title: Employment Type
+          default: ''
       type: object
-      required:
-      - employment_type_id
-      - employment_type
       title: JobEmploymentTypeSimpleField
     JobEmploymentTypeSimpleList:
       properties:
@@ -543,47 +553,46 @@ components:
             "$ref": "#/components/schemas/JobEmploymentTypeSimpleField"
           type: array
           title: Employment Types
+          default: []
       type: object
-      required:
-      - employment_types
       title: JobEmploymentTypeSimpleList
     JobSalaryField:
       properties:
         range:
-          "$ref": "#/components/schemas/JobSalaryRangeField"
+          allOf:
+          - "$ref": "#/components/schemas/JobSalaryRangeField"
+          default: {}
         currency:
           type: string
           title: Currency
+          default: ''
       type: object
-      required:
-      - range
-      - currency
       title: JobSalaryField
     JobSalaryRangeField:
       properties:
         min:
-          type: number
+          anyOf:
+          - type: number
+          - type: 'null'
           title: Min
         max:
-          type: number
+          anyOf:
+          - type: number
+          - type: 'null'
           title: Max
       type: object
-      required:
-      - min
-      - max
       title: JobSalaryRangeField
     JobWorkArrangementSimpleField:
       properties:
         work_arrangement_id:
           type: string
           title: Work Arrangement Id
+          default: ''
         work_arrangement:
           type: string
           title: Work Arrangement
+          default: ''
       type: object
-      required:
-      - work_arrangement_id
-      - work_arrangement
       title: JobWorkArrangementSimpleField
     JobWorkArrangementSimpleList:
       properties:
@@ -592,26 +601,35 @@ components:
             "$ref": "#/components/schemas/JobWorkArrangementSimpleField"
           type: array
           title: Work Arrangements
+          default: []
       type: object
-      required:
-      - work_arrangements
       title: JobWorkArrangementSimpleList
     JobWorkExperienceSimpleField:
       properties:
         work_experience_id:
           type: string
           title: Work Experience Id
+          default: ''
         category:
           type: string
           title: Category
+          default: ''
         description:
-          type: string
+          anyOf:
+          - type: string
+          - type: 'null'
           title: Description
+        min_year:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Min Year
+        max_year:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Max Year
       type: object
-      required:
-      - work_experience_id
-      - category
-      - description
       title: JobWorkExperienceSimpleField
     JobWorkExperienceSimpleList:
       properties:
@@ -620,22 +638,20 @@ components:
             "$ref": "#/components/schemas/JobWorkExperienceSimpleField"
           type: array
           title: Work Experiences
+          default: []
       type: object
-      required:
-      - work_experiences
       title: JobWorkExperienceSimpleList
     KeywordSimpleField:
       properties:
         keyword_id:
           type: string
           title: Keyword Id
+          default: ''
         keyword_name:
           type: string
           title: Keyword Name
+          default: ''
       type: object
-      required:
-      - keyword_id
-      - keyword_name
       title: KeywordSimpleField
     KeywordSimpleList:
       properties:
@@ -644,9 +660,8 @@ components:
             "$ref": "#/components/schemas/KeywordSimpleField"
           type: array
           title: Keywords
+          default: []
       type: object
-      required:
-      - keywords
       title: KeywordSimpleList
     KeywordType:
       type: string
@@ -659,13 +674,12 @@ components:
         location_id:
           type: string
           title: Location Id
+          default: ''
         location_name:
           type: string
           title: Location Name
+          default: ''
       type: object
-      required:
-      - location_id
-      - location_name
       title: LocationSimpleField
     LocationSimpleList:
       properties:
@@ -674,9 +688,8 @@ components:
             "$ref": "#/components/schemas/LocationSimpleField"
           type: array
           title: Locations
+          default: []
       type: object
-      required:
-      - locations
       title: LocationSimpleList
     ValidationError:
       properties:
